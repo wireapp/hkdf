@@ -83,10 +83,10 @@ fn expand(Tag(prk): Tag, Info(info): Info, len: usize) -> Vec<u8> {
         buf.push(i as u8);
 
         let t_i = authenticate(buf.as_slice(), &Key(prk));
-        okm.push_all(t_i.as_slice());
+        okm.push_all(t_i.0.as_slice());
 
         t.clear();
-        t.push_all(t_i.as_slice());
+        t.push_all(t_i.0.as_slice());
     }
 
     okm.into_iter().take(len).collect()
@@ -95,11 +95,11 @@ fn expand(Tag(prk): Tag, Info(info): Info, len: usize) -> Vec<u8> {
 // Tests ////////////////////////////////////////////////////////////////////
 
 #[cfg(test)]
-extern crate "rustc-serialize" as serialize;
+extern crate "rustc-serialize" as rustc_serialize;
 
 #[test]
 fn test_case_1() {
-    use serialize::hex::FromHex;
+    use rustc_serialize::hex::FromHex;
 
     let ikm  = "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b".from_hex().unwrap();
     let salt = "000102030405060708090a0b0c".from_hex().unwrap();
@@ -112,13 +112,13 @@ fn test_case_1() {
     let prk = extract(Salt(salt.as_slice()), Input(ikm.as_slice()));
     let okm = expand(prk, Info(info.as_slice()), len);
 
-    assert_eq!(expected_prk.as_slice(), prk.as_slice());
+    assert_eq!(expected_prk.as_slice(), prk.0.as_slice());
     assert_eq!(expected_okm.as_slice(), okm.as_slice());
 }
 
 #[test]
 fn test_case_2() {
-    use serialize::hex::FromHex;
+    use rustc_serialize::hex::FromHex;
 
     let ikm  = "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f".from_hex().unwrap();
     let salt = "606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeaf".from_hex().unwrap();
@@ -131,13 +131,13 @@ fn test_case_2() {
     let prk = extract(Salt(salt.as_slice()), Input(ikm.as_slice()));
     let okm = expand(prk, Info(info.as_slice()), len);
 
-    assert_eq!(expected_prk.as_slice(), prk.as_slice());
+    assert_eq!(expected_prk.as_slice(), prk.0.as_slice());
     assert_eq!(expected_okm.as_slice(), okm.as_slice());
 }
 
 #[test]
 fn test_case_3() {
-    use serialize::hex::FromHex;
+    use rustc_serialize::hex::FromHex;
 
     let ikm  = "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b".from_hex().unwrap();
     let salt = b"";
@@ -150,6 +150,6 @@ fn test_case_3() {
     let prk = extract(Salt(salt), Input(ikm.as_slice()));
     let okm = expand(prk, Info(info), len);
 
-    assert_eq!(expected_prk.as_slice(), prk.as_slice());
+    assert_eq!(expected_prk.as_slice(), prk.0.as_slice());
     assert_eq!(expected_okm.as_slice(), okm.as_slice());
 }
