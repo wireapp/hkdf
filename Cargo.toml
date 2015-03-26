@@ -1,16 +1,15 @@
 [package]
 
-name         = "hkdf"
-version      = "0.0.1"
-authors      = ["Toralf Wittner <tw@dtex.org>"]
-description  = "HKDF implementation (RFC 5869)"
-homepage     = "https://github.com/twittner/hkdf"
-repository   = "git@github.com:twittner/hkdf.git"
-license      = "MPL-2.0"
+name        = "hkdf"
+version     = "0.0.1"
+authors     = ["Toralf Wittner <tw@dtex.org>"]
+description = "HKDF implementation (RFC 5869)"
+homepage    = "https://github.com/twittner/hkdf"
+repository  = "git@github.com:twittner/hkdf.git"
+license     = "MPL-2.0"
 
-[dependencies.sodiumoxide]
-git = "https://github.com/dnaq/sodiumoxide"
+[dependencies]
+sodiumoxide = "> 0.0.1"
 
 [dev-dependencies]
-rustc-serialize = "0.2"
-
+rustc-serialize = "> 0.3.0"

@@ -78,15 +78,15 @@ fn expand(Tag(prk): Tag, Info(info): Info, len: usize) -> Vec<u8> {
 
     for i in range_inclusive(1, n) {
         let mut buf = Vec::with_capacity(t.len() + info.len() + 1);
-        buf.push_all(t.as_slice());
+        buf.push_all(&t);
         buf.push_all(info);
         buf.push(i as u8);
 
-        let t_i = authenticate(buf.as_slice(), &Key(prk));
-        okm.push_all(t_i.0.as_slice());
+        let t_i = authenticate(&buf, &Key(prk));
+        okm.push_all(&t_i.0);
 
         t.clear();
-        t.push_all(t_i.0.as_slice());
+        t.push_all(&t_i.0);
     }
 
     okm.into_iter().take(len).collect()
@@ -95,7 +95,7 @@ fn expand(Tag(prk): Tag, Info(info): Info, len: usize) -> Vec<u8> {
 // Tests ////////////////////////////////////////////////////////////////////
 
 #[cfg(test)]
-extern crate "rustc-serialize" as rustc_serialize;
+extern crate rustc_serialize;
 
 #[test]
 fn test_case_1() {
@@ -109,11 +109,11 @@ fn test_case_1() {
     let expected_prk = "077709362c2e32df0ddc3f0dc47bba6390b6c73bb50f9c3122ec844ad7c2b3e5".from_hex().unwrap();
     let expected_okm = "3cb25f25faacd57a90434f64d0362f2a2d2d0a90cf1a5a4c5db02d56ecc4c5bf34007208d5b887185865".from_hex().unwrap();
 
-    let prk = extract(Salt(salt.as_slice()), Input(ikm.as_slice()));
-    let okm = expand(prk, Info(info.as_slice()), len);
+    let prk = extract(Salt(&salt), Input(&ikm));
+    let okm = expand(prk, Info(&info), len);
 
-    assert_eq!(expected_prk.as_slice(), prk.0.as_slice());
-    assert_eq!(expected_okm.as_slice(), okm.as_slice());
+    assert_eq!(&expected_prk, &prk.0);
+    assert_eq!(&expected_okm, &okm);
 }
 
 #[test]
@@ -128,11 +128,11 @@ fn test_case_2() {
     let expected_prk = "06a6b88c5853361a06104c9ceb35b45cef760014904671014a193f40c15fc244".from_hex().unwrap();
     let expected_okm = "b11e398dc80327a1c8e7f78c596a49344f012eda2d4efad8a050cc4c19afa97c59045a99cac7827271cb41c65e590e09da3275600c2f09b8367793a9aca3db71cc30c58179ec3e87c14c01d5c1f3434f1d87".from_hex().unwrap();
 
-    let prk = extract(Salt(salt.as_slice()), Input(ikm.as_slice()));
-    let okm = expand(prk, Info(info.as_slice()), len);
+    let prk = extract(Salt(&salt), Input(&ikm));
+    let okm = expand(prk, Info(&info), len);
 
-    assert_eq!(expected_prk.as_slice(), prk.0.as_slice());
-    assert_eq!(expected_okm.as_slice(), okm.as_slice());
+    assert_eq!(&expected_prk, &prk.0);
+    assert_eq!(&expected_okm, &okm);
 }
 
 #[test]
@@ -147,9 +147,9 @@ fn test_case_3() {
     let expected_prk = "19ef24a32c717b167f33a91d6f648bdf96596776afdb6377ac434c1c293ccb04".from_hex().unwrap();
     let expected_okm = "8da4e775a563c18f715f802a063c5a31b8a11f5c5ee1879ec3454e5f3c738d2d9d201395faa4b61a96c8".from_hex().unwrap();
 
-    let prk = extract(Salt(salt), Input(ikm.as_slice()));
+    let prk = extract(Salt(salt), Input(&ikm));
     let okm = expand(prk, Info(info), len);
 
-    assert_eq!(expected_prk.as_slice(), prk.0.as_slice());
-    assert_eq!(expected_okm.as_slice(), okm.as_slice());
+    assert_eq!(&expected_prk, &prk.0);
+    assert_eq!(&expected_okm, &okm);
 }
