@@ -65,7 +65,7 @@ fn mk_salt(input: &[u8]) -> [u8; KEYBYTES] {
         d
     } else {
         let mut b = [0; KEYBYTES];
-        copy_memory(b.as_mut_slice(), input);
+        copy_memory(&mut b, input);
         b
     }
 }
