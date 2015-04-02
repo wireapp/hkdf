@@ -23,7 +23,6 @@ use sodiumoxide::crypto::auth::hmacsha256::{KEYBYTES};
 use sodiumoxide::crypto::auth::hmacsha256::{Tag, Key, authenticate};
 use sodiumoxide::crypto::hash::sha256::{Digest, hash};
 use std::iter::range_inclusive;
-use std::num::Float;
 use std::slice::bytes::copy_memory;
 use std::vec::Vec;
 
@@ -65,7 +64,7 @@ fn mk_salt(input: &[u8]) -> [u8; KEYBYTES] {
         d
     } else {
         let mut b = [0; KEYBYTES];
-        copy_memory(&mut b, input);
+        copy_memory(input, &mut b);
         b
     }
 }
