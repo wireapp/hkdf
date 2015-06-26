@@ -15,14 +15,13 @@
 //!
 //! [1]: https://tools.ietf.org/html/rfc5869
 
-#![feature(collections, core)]
+#![feature(slice_bytes)]
 
 extern crate sodiumoxide;
 
 use sodiumoxide::crypto::auth::hmacsha256::{KEYBYTES};
 use sodiumoxide::crypto::auth::hmacsha256::{Tag, Key, authenticate};
 use sodiumoxide::crypto::hash::sha256::{Digest, hash};
-use std::iter::range_inclusive;
 use std::slice::bytes::copy_memory;
 use std::vec::Vec;
 
@@ -75,17 +74,17 @@ fn expand(Tag(prk): Tag, Info(info): Info, len: usize) -> Vec<u8> {
     let mut t   = Vec::new();
     let mut okm = Vec::new();
 
-    for i in range_inclusive(1, n) {
+    for i in 1 .. n + 1 {
         let mut buf = Vec::with_capacity(t.len() + info.len() + 1);
-        buf.push_all(&t);
-        buf.push_all(info);
+        buf.extend(&t);
+        buf.extend(info);
         buf.push(i as u8);
 
         let t_i = authenticate(&buf, &Key(prk));
-        okm.push_all(&t_i.0);
+        okm.extend(&t_i.0);
 
         t.clear();
-        t.push_all(&t_i.0);
+        t.extend(&t_i.0);
     }
 
     okm.into_iter().take(len).collect()
