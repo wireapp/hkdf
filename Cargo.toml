@@ -9,7 +9,7 @@ repository  = "git@github.com:twittner/hkdf.git"
 license     = "MPL-2.0"
 
 [dependencies]
-sodiumoxide = "> 0.0.4"
+sodiumoxide = "> 0.0.5"
 
 [dev-dependencies]
 rustc-serialize = "> 0.3.0"
