@@ -2,11 +2,11 @@
 
 name        = "hkdf"
 version     = "0.1.0"
-authors     = ["Toralf Wittner <tw@dtex.org>"]
+authors     = ["Wire Swiss GmbH <support@wire.com>"]
 description = "HKDF implementation (RFC 5869)"
-homepage    = "https://github.com/twittner/hkdf"
-repository  = "git@github.com:twittner/hkdf.git"
-license     = "MPL-2.0"
+homepage    = "https://github.com/wireapp/hkdf"
+repository  = "git@github.com:wireapp/hkdf.git"
+license     = "GPL-3.0"
 
 [dependencies]
 sodiumoxide = "> 0.0.5"
