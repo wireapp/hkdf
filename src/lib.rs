@@ -25,14 +25,12 @@
 //!
 //! [1]: https://tools.ietf.org/html/rfc5869
 
-#![feature(slice_bytes)]
-
 extern crate sodiumoxide;
 
 use sodiumoxide::crypto::auth::hmacsha256::{KEYBYTES};
 use sodiumoxide::crypto::auth::hmacsha256::{Tag, Key, authenticate};
 use sodiumoxide::crypto::hash::sha256::{Digest, hash};
-use std::slice::bytes::copy_memory;
+use std::io::Write;
 use std::vec::Vec;
 
 pub const HASH_LEN: usize = 32;
@@ -73,7 +71,7 @@ fn mk_salt(input: &[u8]) -> [u8; KEYBYTES] {
         d
     } else {
         let mut b = [0; KEYBYTES];
-        copy_memory(input, &mut b);
+        b.as_mut().write_all(&input).unwrap();
         b
     }
 }
