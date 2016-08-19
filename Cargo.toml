@@ -8,8 +8,9 @@ homepage    = "https://github.com/wireapp/hkdf"
 repository  = "git@github.com:wireapp/hkdf.git"
 license     = "GPL-3.0"
 
-[dependencies]
-sodiumoxide = "> 0.0.5"
+[dependencies.sodiumoxide]
+version = ">= 0.0.12"
+default-features = false
 
 [dev-dependencies]
 rustc-serialize = "> 0.3.0"
