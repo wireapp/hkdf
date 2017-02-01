@@ -28,8 +28,9 @@
 extern crate sodiumoxide;
 
 use sodiumoxide::crypto::auth::hmacsha256::{KEYBYTES};
-use sodiumoxide::crypto::auth::hmacsha256::{Tag, Key, authenticate};
+use sodiumoxide::crypto::auth::hmacsha256::{self, Tag, authenticate};
 use sodiumoxide::crypto::hash::sha256::{Digest, hash};
+use sodiumoxide::utils;
 use std::io::Write;
 use std::vec::Vec;
 
@@ -40,6 +41,14 @@ pub struct Input<'r>(pub &'r [u8]);
 pub struct Salt<'r>(pub &'r [u8]);
 
 pub struct Info<'r>(pub &'r [u8]);
+
+pub struct Key(pub Vec<u8>);
+
+impl Drop for Key {
+    fn drop(&mut self) {
+        utils::memzero(&mut self.0)
+    }
+}
 
 /// Length of output keying material in octets (`<= 255 * HASH_LEN`).
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
@@ -53,13 +62,13 @@ impl Len {
 
 /// HMAC-based KDF implementing RFC 5869.
 /// Only SHA-256 is supported as hash function.
-pub fn hkdf(salt: Salt, input: Input, info: Info, Len(len): Len) -> Vec<u8> {
-    expand(extract(salt, input), info, len as usize)
+pub fn hkdf(salt: Salt, input: Input, info: Info, Len(len): Len) -> Key {
+    Key(expand(extract(salt, input), info, len as usize))
 }
 
 // Step1: HKDF-Extract(salt, IKM) -> PRK
 fn extract(Salt(s): Salt, Input(i): Input) -> Tag {
-    authenticate(i, &Key(mk_salt(s)))
+    authenticate(i, &hmacsha256::Key(mk_salt(s)))
 }
 
 // The salt is used as key for HMAC-Hash. It is either padded to the right
@@ -88,7 +97,7 @@ fn expand(Tag(prk): Tag, Info(info): Info, len: usize) -> Vec<u8> {
         buf.extend(info);
         buf.push(i as u8);
 
-        let t_i = authenticate(&buf, &Key(prk));
+        let t_i = authenticate(&buf, &hmacsha256::Key(prk));
         okm.extend(&t_i.0);
 
         t.clear();
