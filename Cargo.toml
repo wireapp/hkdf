@@ -9,7 +9,7 @@ repository  = "git@github.com:wireapp/hkdf.git"
 license     = "GPL-3.0"
 
 [dependencies.sodiumoxide]
-version          = "^0.1"
+version          = "^0.2"
 default-features = false
 features = ["std"]
 
