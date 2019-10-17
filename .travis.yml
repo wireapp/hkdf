@@ -1,7 +1,8 @@
 language: rust
 rust: nightly
-
+cache: cargo # cache cargo-audit once installed
 before_script:
-    - wget "https://github.com/jedisct1/libsodium/releases/download/1.0.3/libsodium-1.0.3.tar.gz"
-    - tar -xzvf libsodium-1.0.3.tar.gz
-    - cd libsodium-1.0.3 && ./configure --prefix=/usr && make && sudo make install
+  - cargo install --force cargo-audit
+  - cargo generate-lockfile
+script:
+  - cargo audit
