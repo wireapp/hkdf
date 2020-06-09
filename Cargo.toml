@@ -2,6 +2,7 @@
 
 name        = "hkdf"
 version     = "0.3.2"
+edition     = '2018'
 authors     = ["Wire Swiss GmbH <support@wire.com>"]
 description = "HKDF implementation (RFC 5869)"
 homepage    = "https://github.com/wireapp/hkdf"
@@ -15,3 +16,5 @@ features = ["std"]
 
 [dev-dependencies]
 rustc-serialize = "> 0.3.0"
+serde_json = "1.0"
+serde = {version = "1.0", features = ["derive"]}
